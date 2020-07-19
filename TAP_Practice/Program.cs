@@ -6,6 +6,8 @@ namespace TAP_Practice
 {
     class Program
     {
+        private static int _count;
+
         static async Task Main(string[] args)
         {
             // ex01 : 製作披薩
@@ -39,9 +41,17 @@ namespace TAP_Practice
             //}
 
             // ex02 : 煮飯
-            await 炒飯工作(5, 2);
+            //await 炒飯工作(5, 2);
 
-            // todo : 中途噴錯處理 https://csharpkh.blogspot.com/2018/08/TAP-Task-Asynchronous-Synchronous-Exception.html
+            // 平行處理(競爭)
+            var task1 = Task.Run(async () => await AddCount(5));
+            var task2 = Task.Run(async () => await AddCount(6));
+            var task3 = Task.Run(async () => await AddCount(7));
+            await task1;
+            await task2;
+            await task3;
+
+            Console.WriteLine(_count);
         }
 
         private static async Task 炒飯工作(int doCount, int stopCount)
@@ -98,6 +108,20 @@ namespace TAP_Practice
             }
             await Task.Delay(workSecondTime * 1000);
             Console.WriteLine($"{workName} finish - 花費 {workSecondTime} 秒");
+        }
+
+        private static async Task AddCount(int count)
+        {
+            const int millisecondsDelay = 2000;
+            
+            await Task.Delay(millisecondsDelay);
+            Console.WriteLine($"Delay : {millisecondsDelay}");
+
+            for (var i = 1; i <= count; i++)
+            {
+                _count++;
+                Console.WriteLine($"_count : {_count}");
+            }
         }
     }
 }
