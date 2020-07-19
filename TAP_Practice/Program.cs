@@ -39,11 +39,18 @@ namespace TAP_Practice
             //}
 
             // ex02 : 煮飯
+            await 炒飯工作(5, 2);
+
+            // todo : 中途噴錯處理 https://csharpkh.blogspot.com/2018/08/TAP-Task-Asynchronous-Synchronous-Exception.html
+        }
+
+        private static async Task 炒飯工作(int doCount, int stopCount)
+        {
             Console.WriteLine("開始進行煮飯...");
             var cts = new CancellationTokenSource();
             try
             {
-                for (var i = 1; i <= 3; i++)
+                for (var i = 1; i <= doCount; i++)
                 {
                     Console.WriteLine($"Round {i}");
 
@@ -65,7 +72,7 @@ namespace TAP_Practice
                     }, cts.Token);
 
                     // 中途取消task,要再await之前
-                    if (i == 3)
+                    if (i == stopCount)
                     {
                         cts.Cancel();
                     }
@@ -81,8 +88,6 @@ namespace TAP_Practice
             {
                 Console.WriteLine("Task Canceled");
             }
-
-            // todo : 中途噴錯處理 https://csharpkh.blogspot.com/2018/08/TAP-Task-Asynchronous-Synchronous-Exception.html
         }
 
         private static async Task DoWork(string workName, int workSecondTime, CancellationTokenSource cts)
