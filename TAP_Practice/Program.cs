@@ -7,6 +7,7 @@ namespace TAP_Practice
     class Program
     {
         private static int _count;
+        private static readonly SemaphoreSlim Locker = new SemaphoreSlim(1, 1);
 
         static async Task Main(string[] args)
         {
@@ -112,16 +113,17 @@ namespace TAP_Practice
 
         private static async Task AddCount(int count)
         {
-            const int millisecondsDelay = 2000;
-            
-            await Task.Delay(millisecondsDelay);
-            Console.WriteLine($"Delay : {millisecondsDelay}");
+            await Locker.WaitAsync();
 
+            #region 鎖定區塊
             for (var i = 1; i <= count; i++)
             {
                 _count++;
                 Console.WriteLine($"_count : {_count}");
             }
+            #endregion
+
+            Locker.Release();
         }
     }
 }
