@@ -113,6 +113,7 @@ namespace TAP_Practice
 
         private static async Task AddCount(int count)
         {
+            // 使用 SemaphoreSlim 鎖定 Task
             await Locker.WaitAsync();
 
             #region 鎖定區塊
